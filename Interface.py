@@ -2,6 +2,7 @@
 """ Interface classes """
 
 import os, sys
+import math
 import pygame
 from pygame.locals import *
 
@@ -42,6 +43,11 @@ class Interfacer:
 		
 		self.rtel = 0.5
 		self.rdir = True
+		
+		self.armtheta1 = -45
+		self.armtheta2 = 60
+		self.armtheta3 = 0
+		
 		
 		
 	def drawHouse(self,x, y, width, height, screen, color):
@@ -100,7 +106,65 @@ class Interfacer:
 		self.animRotation()
 		
 		"""self.intRec()"""
+		self.armtheta1 = math.degrees(math.pi*(self.joyx)/2)
+		self.armtheta2 = math.degrees(math.pi*(self.joyy))
+		self.drawArmTop(self.screen,500,500,self.armtheta1,self.armtheta2,self.armtheta3,green)
 		self.intHouse()
+		
+			
+	def drawArmTop(self,screen,armx1,army1,armtheta1,armtheta2,armtheta3,color):
+		lineThickness = 2
+		
+		x1 = armx1
+		y1 = army1
+		theta1 = math.radians(armtheta1-90)
+		
+		x2 = x1 + (100*math.cos(theta1))
+		y2 = y1 + (100*math.sin(theta1))
+		theta2 = math.radians(armtheta1+armtheta2-90)
+		
+		x3 = x2 + (100*math.cos(theta2))
+		y3 = y2 + (100*math.sin(theta2))
+		
+		lowerarm_points = [(x2, y2), (x3, y3)]
+		self.drawPartArmTop(screen,x2,y2,x3,y3,10,green)
+		
+		upperarm_points = [(x1, y1), (x2, y2)]
+		self.drawPartArmTop(screen,x1,y1,x2,y2,12,green)
+		
+		
+	def drawPartArmTop(self, screen, x1, y1, x2, y2, width=15, color=green):
+		lineThickness = 3
+		hpi = math.pi/2
+		if (x1 != x2):
+			theta = math.atan((y1-y2)/(x2-x1))
+			print "theta: ", theta
+		else:
+			if (y2>y1):
+				theta = -hpi
+			else:
+				theta = hpi
+			
+		xw = width*math.sin(theta)
+		yw = width*math.cos(theta)
+		
+		x11 = x1 - xw
+		y11 = y1 - yw
+		x12 = x1 + xw
+		y12 = y1 + yw
+		
+		x21 = x2 - xw
+		y21 = y2 - yw
+		x22 = x2 + xw
+		y22 = y2 + yw
+		
+		points1 = [(x11,y11),(x21,y21)]
+		points2 = [(x12,y12),(x22,y22)]
+		pygame.draw.lines(screen, color, False, points1, lineThickness)
+		pygame.draw.lines(screen, color, False, points2, lineThickness)
+		
+		pygame.draw.circle(screen,color,(int(x1),int(y1)),width,2)
+		pygame.draw.circle(screen,color,(int(x2),int(y2)),width,2)
 		
 		
 	def updateJoyAxis(self,joy):
@@ -108,6 +172,7 @@ class Interfacer:
 		self.joyx = jx
 		self.joyy = jy
 		self.joyr = jr
+		
 		
 	def animRotation(self):
 		if(self.rtel>1):
@@ -134,6 +199,7 @@ class Interfacer:
 		elif (key == K_ESCAPE):
 			sys.exit()
 	
+	
 	def mouseEventHandl(self,button,(xpos,ypos)):
 		self.mx = xpos
 		self.my = ypos
@@ -142,10 +208,12 @@ class Interfacer:
 		self.yr1 = ypos
 		self.yr2 = ypos + 20
 
+
 	def resizeHadl(self,size,w,h,screen):
 		self.xscr = w
 		self.yscr = h
 		self.screen = screen
+	
 
 class TextPrint:
 	def __init__(self,inter):

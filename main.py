@@ -7,9 +7,6 @@ import pygame.camera
 from pygame.locals import *
 from Interface import *
 from joystickh import *
-#import cv2
-#from cv2 import __version__
-#print "Opencv versie " + __version__
 import socketmanager
 
 if not pygame.font: print 'Warning, fonts disabled'
@@ -55,23 +52,6 @@ class PyManMain:
 		joystick = JoyStickHandl()
 		#""" Print text """
 		textPrint = TextPrint(inter)
-		#""" Camera initialiseren """
-		"""pygame.camera.init()
-		cameras = pygame.camera.list_cameras()
-		print "Using camera %s ..." % cameras[0]
-		webcam = pygame.camera.Camera(cameras[0])
-		webcam.start()"""
-		#cv2.namedWindow("preview")
-		#vc = cv2.VideoCapture(0)
-		#print "test1"
-		#if vc.isOpened(): # try to get the first frame
-		#	print "test3"
-		#	rval, frame = vc.read()
-		#else:
-		#	print "test4"
-		#	rval = False
-		#print "test2"
-		#"""tell pygame to keep sending up keystrokes when they are
 		#held down"""
 		pygame.key.set_repeat(500, 30)
 		
@@ -98,7 +78,6 @@ class PyManMain:
 					or (event.key == K_UP)
 					or (event.key == K_DOWN)
 					or (event.key == K_ESCAPE)):
-						#cv2.destroyWindow("preview")
 						inter.keyEventHandl(event.key)
 				elif event.type == MOUSEBUTTONDOWN:
 					inter.mouseEventHandl(event.button,event.pos)
@@ -108,15 +87,12 @@ class PyManMain:
 					inter.resizeHadl(event.size,event.w,event.h,screen)
 			pygame.event.pump()
 			
-			#if rval:
-			#	cv2.imshow("preview", frame)
-			#	rval, frame = vc.read()
-			#	"""key = cv2.waitKey(20)"""
 			
 			#--- Socket handeling ---
 			if(updateclientcounter >= 5):
 				#self.clientSock.send('print test')
 				(yax,xax,rax) = joystick.getAxis()
+				#(yax,xax,rax) = (0.0,0.0,0.0)
 				if(math.fabs(xax) > 0.2) or (math.fabs(yax) > 0.2):
 					if(math.fabs(xax) > math.fabs(yax)):
 						if(xax > 0):
@@ -176,7 +152,7 @@ class PyManMain:
 			
 			#""" Image handeling """
 			pygame.display.flip()
-			msElapsed = clock.tick(20)
+			msElapsed = clock.tick(40)
 
 
 
