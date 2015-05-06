@@ -28,7 +28,7 @@ class PyManMain:
 	#"""The Main PyMan Class - This class handles the main 
 	#initialization and creating of the Game."""
 	
-	def __init__(self, width=1000,height=720):
+	def __init__(self, width=1280,height=720):
 		#"""Initialize"""
 		#"""Initialize PyGame"""
 		pygame.init()
